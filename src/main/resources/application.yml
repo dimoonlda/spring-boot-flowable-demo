@@ -1,0 +1,25 @@
+spring:
+  profiles.active: dev
+  jackson:
+    serialization:
+      write_dates_as_timestamps: false
+  jpa:
+    database: postgresql
+    hibernate:
+      ddl-auto: update
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+server:
+  port: 8088
+---
+spring:
+  profiles: dev
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5432/flowable
+    username: postgres
+    password: postgres
+logging:
+  level:
+#    ROOT: 'DEBUG'
+    ua.kiev.dimoon.portal.back: 'DEBUG'

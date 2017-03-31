@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+             xmlns:flowable="http://flowable.org/bpmn"
+             typeLanguage="http://www.w3.org/2001/XMLSchema"
+             expressionLanguage="http://www.w3.org/1999/XPath"
+             targetNamespace="http://www.flowable.org/processdef">
+
+    <process id="testServiceRequest" name="Test service request" isExecutable="true">
+
+        <startEvent id="startServiceEvent"/>
+        <sequenceFlow sourceRef="startServiceEvent" targetRef="weatherCall"/>
+
+        <!-- Work with weather START -->
+        <serviceTask id="weatherCall" name="Get weather from service"
+                     flowable:delegateExpression="${getWeatherInfoDelegate}" flowable:async="true"/>
+        <sequenceFlow sourceRef="weatherCall" targetRef="saveWeatherToDb"/>
+
+        <serviceTask id="saveWeatherToDb" name="Save weather info to DB"
+                     flowable:delegateExpression="${saveWeatherInfoToDbDelegate}"/>
+        <sequenceFlow sourceRef="saveWeatherToDb" targetRef="customerCall"/>
+        <!-- Work with weather END -->
+
+        <!-- Work with customer START -->
+        <serviceTask id="customerCall" name="Get customer from service"
+                     flowable:delegateExpression="${getCustomerInfoDelegate}" flowable:async="true"/>
+        <sequenceFlow sourceRef="customerCall" targetRef="saveCustomerToDb"/>
+
+        <serviceTask id="saveCustomerToDb" name="Save customer info to DB"
+                     flowable:delegateExpression="${saveCustomerInfoToDbDelegate}"/>
+        <sequenceFlow sourceRef="saveCustomerToDb" targetRef="documentCall"/>
+        <!-- Work with customer END -->
+
+        <!-- Work with document START -->
+        <serviceTask id="documentCall" name="Get document from service"
+                     flowable:delegateExpression="${getDocumentInfoDelegate}" flowable:async="true"/>
+        <sequenceFlow sourceRef="documentCall" targetRef="saveDocumentToDb"/>
+
+        <serviceTask id="saveDocumentToDb" name="Save document info to DB"
+                     flowable:delegateExpression="${saveDocumentInfoToDbDelegate}"/>
+        <sequenceFlow sourceRef="saveDocumentToDb" targetRef="endServiceEvent"/>
+        <!-- Work with document END -->
+
+        <endEvent id="endServiceEvent"/>
+
+    </process>
+
+</definitions>
